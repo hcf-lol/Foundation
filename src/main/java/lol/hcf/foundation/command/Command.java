@@ -52,8 +52,13 @@ public abstract class Command implements org.bukkit.command.CommandExecutor, Tab
 
     /**
      * Generates a {@link CommandExecutor} implementation. This method is expensive in creating and generating
-     * a new class instance via ASM & Reflection. Subsequent calls to {@link Command#onCommand(CommandSender, org.bukkit.command.Command, String, String[])}
+     * a new class instance via ASM and Reflection. Subsequent calls to {@link Command#onCommand(CommandSender, org.bukkit.command.Command, String, String[])}
      * will result in fast/direct access speed.
+     *
+     * @param permission The permission node required
+     * @param allowConsole Whether or not to allow console / non-players to run the command
+     * @param aliases Aliases by which this command can be executed
+     *
      */
     public Command(String permission, boolean allowConsole, String... aliases) {
         this.aliases = aliases;
