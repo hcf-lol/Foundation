@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'lol.hcf'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
     mavenCentral()
@@ -45,9 +45,9 @@ publishing {
         mavenPublish(MavenPublication) {
             from components.java
 
-            groupId = "lol.hcf"
+            groupId = project.group
             artifactId = "foundation"
-            version "1.0.0"
+            version project.version
         }
     }
 }

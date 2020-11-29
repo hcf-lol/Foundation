@@ -85,6 +85,11 @@ public abstract class FileStorage<T extends FileStorage<?>> {
      * Saves the current file / writes it to the targetFile
      */
     public void save() {
+        if (!this.targetFile.getParentFile().exists()) {
+            if (!this.targetFile.getParentFile().mkdirs())
+                throw new RuntimeException("failed to create new directory: " + this.targetFile.getParentFile().getPath());
+        }
+
         try (Writer writer = new FileWriter(this.targetFile)) {
             this.dump(writer);
         } catch (FileNotFoundException e) {
