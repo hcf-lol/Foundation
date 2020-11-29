@@ -24,7 +24,3 @@ dependencies {
     implementation group: 'org.ow2.asm', name: 'asm', version: '9.0'
     implementation group: 'org.ow2.asm', name: 'asm-tree', version: '9.0'
 }
-
-test {
-    useJUnitPlatform()
-}
