@@ -16,13 +16,16 @@ import java.util.Map;
 
 /**
  * Storage base class
+ * This class is used as a base for any human-readable text operations
+ * for the serialization/deserialization of the base class' fields into
+ * a specified format.
  *
  * This class can be assumed/allowed to use the unsafe changing of a immutable type to a mutable one
  * via reflection, for the reasons of deserialization.
  *
  * @param <T> Recursive generic pattern to return a strong reference to this, used in the builder pattern
  */
-public abstract class StorageFile<T extends StorageFile<?>> {
+public abstract class FileStorage<T extends FileStorage<?>> {
 
     protected static transient final Field MODIFIERS_FIELD;
 
@@ -31,7 +34,7 @@ public abstract class StorageFile<T extends StorageFile<?>> {
      */
     protected transient final File targetFile;
 
-    public StorageFile(File targetFile) {
+    public FileStorage(File targetFile) {
         this.targetFile = targetFile;
     }
 
@@ -118,7 +121,7 @@ public abstract class StorageFile<T extends StorageFile<?>> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
-        StorageFile<?> that = (StorageFile<?>) o;
+        FileStorage<?> that = (FileStorage<?>) o;
         return this.targetFile.equals(that.targetFile);
     }
 
@@ -133,7 +136,7 @@ public abstract class StorageFile<T extends StorageFile<?>> {
     }
 
     /**
-     * This method may or may not be used by any implementation of {@link StorageFile}
+     * This method may or may not be used by any implementation of {@link FileStorage}
      * @param data The data entries to be reflectively brought into the current instance of the lowest class in the current hierarchy
      */
     protected void reflectiveFieldSet(Map<String, Object> data) {
@@ -141,7 +144,7 @@ public abstract class StorageFile<T extends StorageFile<?>> {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
                 if (Modifier.isFinal(field.getModifiers())) {
-                    ConfigurationFile.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                    ConfigurationFileStorage.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
                 }
 
                 field.setAccessible(true);
@@ -155,7 +158,7 @@ public abstract class StorageFile<T extends StorageFile<?>> {
     static {
         try {
             MODIFIERS_FIELD = Field.class.getDeclaredField("modifiers");
-            StorageFile.MODIFIERS_FIELD.setAccessible(true);
+            FileStorage.MODIFIERS_FIELD.setAccessible(true);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

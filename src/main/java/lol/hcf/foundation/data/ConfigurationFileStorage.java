@@ -21,25 +21,25 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-public class ConfigurationFile extends StorageFile<ConfigurationFile> {
+public class ConfigurationFileStorage extends FileStorage<ConfigurationFileStorage> {
 
     private static transient final Yaml YAML;
 
-    protected ConfigurationFile(File configFile) {
+    protected ConfigurationFileStorage(File configFile) {
         super(configFile);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public ConfigurationFile parse(Reader in) {
-        Map<String, Object> config = (Map<String, Object>) ConfigurationFile.YAML.load(in);
+    public ConfigurationFileStorage parse(Reader in) {
+        Map<String, Object> config = (Map<String, Object>) ConfigurationFileStorage.YAML.load(in);
         super.reflectiveFieldSet(config);
         return this;
     }
 
     @Override
-    public ConfigurationFile dump(Writer out) {
-        ConfigurationFile.YAML.dump(this, out);
+    public ConfigurationFileStorage dump(Writer out) {
+        ConfigurationFileStorage.YAML.dump(this, out);
         return this;
     }
 
@@ -52,7 +52,7 @@ public class ConfigurationFile extends StorageFile<ConfigurationFile> {
 
         // Using a custom constructor and representer to properly replace the color char
         YAML = new Yaml(new YamlConstructor(), new YamlRepresenter(), options);
-        ConfigurationFile.YAML.setBeanAccess(BeanAccess.FIELD);
+        ConfigurationFileStorage.YAML.setBeanAccess(BeanAccess.FIELD);
     }
 
     private static class YamlRepresenter extends Representer {

@@ -9,24 +9,24 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DataFile extends StorageFile<DataFile> {
+public class DataFileStorage extends FileStorage<DataFileStorage> {
 
     private static transient final Gson GSON;
 
-    public DataFile(File targetFile) {
+    public DataFileStorage(File targetFile) {
         super(targetFile);
     }
 
     @Override
-    public DataFile dump(Writer out) {
-        DataFile.GSON.toJson(this, out);
+    public DataFileStorage dump(Writer out) {
+        DataFileStorage.GSON.toJson(this, out);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public DataFile parse(Reader in) {
-        Map<String, Object> data = DataFile.GSON.fromJson(in, HashMap.class);
+    public DataFileStorage parse(Reader in) {
+        Map<String, Object> data = DataFileStorage.GSON.fromJson(in, HashMap.class);
         super.reflectiveFieldSet(data);
         return this;
     }
