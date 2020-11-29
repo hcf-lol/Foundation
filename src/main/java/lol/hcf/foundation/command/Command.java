@@ -51,7 +51,9 @@ public abstract class Command implements org.bukkit.command.CommandExecutor, Tab
     private final CommandExecutor executor;
 
     /**
-     * Generates a {@link CommandExecutor} implementation.
+     * Generates a {@link CommandExecutor} implementation. This method is expensive in creating and generating
+     * a new class instance via ASM & Reflection. Subsequent calls to {@link Command#onCommand(CommandSender, org.bukkit.command.Command, String, String[])}
+     * will result in fast/direct access speed.
      */
     public Command(String permission, boolean allowConsole, String... aliases) {
         this.aliases = aliases;
@@ -85,14 +87,13 @@ public abstract class Command implements org.bukkit.command.CommandExecutor, Tab
             String parameterName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).name() : parameter.getName();
             usageBuilder.append("[").append(parameterName).append("] ");
 
+
             executeInstructions.add(new FieldInsnNode(
                 GETSTATIC,
                 this.getClassName(ArgumentParser.class),
                 "PARSE_" + parameter.getType().getSimpleName().toUpperCase(),
                 'L' + this.getClassName(Function.class) + ';'
             ));
-
-
 
             if (i == method.getParameters().length - 1 && parameter.isAnnotationPresent(Optional.class)) {
                 LabelNode endLabel = new LabelNode();
@@ -159,7 +160,7 @@ public abstract class Command implements org.bukkit.command.CommandExecutor, Tab
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
         if (!this.allowConsole && !(sender instanceof Player)) {
-            //sender.sendMessage(HardcoreFactions.getInstance().getConfiguration().getCommandRejectError());
+            sender.sendMessage("This command cannot be executed if you are not a player.");
             return true;
         }
 

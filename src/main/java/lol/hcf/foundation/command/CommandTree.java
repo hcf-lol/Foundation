@@ -17,7 +17,7 @@ public class CommandTree extends Command {
 
     private static final String CHAT_SEPARATOR = ChatColor.GOLD.toString() + ChatColor.STRIKETHROUGH.toString() + String.join("", Collections.nCopies(53, "-"));;
 
-    private final CommandConfig config;
+    protected final CommandConfig config;
     private final String description;
     private final String category;
     private final Map<String, CommandTree> subcommands;
