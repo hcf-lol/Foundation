@@ -1,12 +1,12 @@
-import lol.hcf.foundation.data.ConfigurationFileStorage;
-import lol.hcf.foundation.data.DataFileStorage;
+import lol.hcf.foundation.data.ConfigurationFile;
+import lol.hcf.foundation.data.DataFile;
 import org.bukkit.ChatColor;
 
 import java.io.File;
 
 public class ConfigExample {
 
-    public static class YamlTest extends ConfigurationFileStorage {
+    public static class YamlTest extends ConfigurationFile {
         public YamlTest(File configFile) {
             super(configFile);
         }
@@ -16,7 +16,7 @@ public class ConfigExample {
         public final int iVal = 4;
     }
 
-    public static class JsonTest extends DataFileStorage {
+    public static class JsonTest extends DataFile {
         public JsonTest(File targetFile) {
             super(targetFile);
         }

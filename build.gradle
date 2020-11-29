@@ -17,7 +17,6 @@ repositories {
     }
 
 }
-print(System.getenv('GITHUB_OAUTH'))
 
 dependencies {
     implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'

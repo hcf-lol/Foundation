@@ -144,7 +144,7 @@ public abstract class FileStorage<T extends FileStorage<?>> {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
                 if (Modifier.isFinal(field.getModifiers())) {
-                    ConfigurationFileStorage.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+                    ConfigurationFile.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
                 }
 
                 field.setAccessible(true);
