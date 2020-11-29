@@ -1,0 +1,6 @@
+name: Foundation
+version: 1.0.0
+description: Core Libraries and Utilities
+main: lol.hcf.foundation.plugin.Plugin
+load: STARTUP
+authors: [Asyc]

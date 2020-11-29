@@ -1,0 +1,10 @@
+# IDEA / Gradle
+.gradle/
+.idea/
+*.ipr
+*.iml
+
+# Building / Testing
+build/
+/test/
+out/
