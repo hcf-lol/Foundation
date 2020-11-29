@@ -1,5 +1,6 @@
-package lol.hcf.foundation.data;
+package lol.hcf.foundation.data.impl.yml;
 
+import lol.hcf.foundation.data.FileStorage;
 import org.bukkit.ChatColor;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.TypeDescription;

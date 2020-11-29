@@ -1,5 +1,7 @@
 package lol.hcf.foundation.data;
 
+import lol.hcf.foundation.data.impl.yml.ConfigurationFile;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -142,6 +144,7 @@ public abstract class FileStorage<T extends FileStorage<?>> {
 
     /**
      * This method may or may not be used by any implementation of {@link FileStorage}
+     * This method will break if any {@link SecurityManager} is preventing this operation.
      * @param data The data entries to be reflectively brought into the current instance of the lowest class in the current hierarchy
      */
     protected void reflectiveFieldSet(Map<String, Object> data) {
