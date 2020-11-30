@@ -15,8 +15,6 @@ import java.util.TreeSet;
 
 public class CommandTree extends Command {
 
-    private static final String CHAT_SEPARATOR = ChatColor.GOLD.toString() + ChatColor.STRIKETHROUGH.toString() + String.join("", Collections.nCopies(53, "-"));;
-
     protected final CommandConfig config;
     private final String description;
     private final String category;
@@ -51,7 +49,7 @@ public class CommandTree extends Command {
         }
 
         if (this.category == null) {
-            //sender.sendMessage(String.format(HardcoreFactions.getInstance().getConfiguration().getMessageConfig().unknownCommand, '/' + label.split(" ")[0].toLowerCase() + " help"));
+            sender.sendMessage(String.format(this.config.getUnknownCommandError(), '/' + label.split(" ")[0].toLowerCase() + " help"));
             return true;
         }
 
@@ -80,7 +78,7 @@ public class CommandTree extends Command {
         commands.addAll(this.subcommands.values());
 
         List<String> help = new ArrayList<>(commands.size() * 3 + 2);
-        help.add(CommandTree.CHAT_SEPARATOR);
+        help.add(this.config.getChatSeparator());
 
         String lastCategory = null;
         for (CommandTree subcommand : commands) {
@@ -109,7 +107,7 @@ public class CommandTree extends Command {
             help.add("");
         }
 
-        help.set(help.size() - 1, CommandTree.CHAT_SEPARATOR);
+        help.set(help.size() - 1, this.config.getChatSeparator());
 
         this.helpMessage = new String[help.size()];
         help.toArray(this.helpMessage);
