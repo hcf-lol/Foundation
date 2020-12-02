@@ -81,14 +81,6 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
         return this.aliases;
     }
 
-    public String getPermission() {
-        return this.permission;
-    }
-
-    public boolean isPlayerOnly() {
-        return this.playerOnly;
-    }
-
     public String getUsage() {
         return this.usage;
     }

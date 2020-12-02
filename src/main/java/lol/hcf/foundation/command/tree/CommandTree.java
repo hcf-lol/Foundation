@@ -12,16 +12,23 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class CommandTree<C extends CommandConfiguration> extends Command<C> {
 
     private final String[] helpMessage;
     private final Map<String, Command<?>> subcommands;
 
+    private final String[] tabCompletionOptions;
+
     private CommandTree(C config, String[] helpMessage, Map<String, Command<?>> subcommands, String... aliases) {
         super(null, config, null, false, aliases);
         this.helpMessage = helpMessage;
         this.subcommands = subcommands;
+
+        Set<String> commands = new TreeSet<>(Comparator.naturalOrder());
+        commands.addAll(subcommands.values().stream().map((command) -> command.getAliases()[0].toLowerCase()).collect(Collectors.toSet()));
+        this.tabCompletionOptions = commands.toArray(new String[0]);
     }
 
     @Override
@@ -56,6 +63,29 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> options = new ArrayList<>(this.tabCompletionOptions.length);
+            for (String option : this.tabCompletionOptions) {
+                if (option.startsWith(args[0].toLowerCase())) options.add(option);
+            }
+
+            return options;
+        }
+
+        Command<?> entry = this.subcommands.get(args[0].toLowerCase());
+        if (entry == null) {
+            return null;
+        }
+
+        String subLabel = alias + ' ' + args[0].toLowerCase();
+
+        String[] subArgs = new String[args.length - 1];
+        System.arraycopy(args, 1, subArgs, 0, subArgs.length);
+        return entry.onTabComplete(sender, command, subLabel, subArgs);
     }
 
     public void setCommand(org.bukkit.command.PluginCommand command) {
