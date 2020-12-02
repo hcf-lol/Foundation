@@ -1,6 +1,8 @@
 package lol.hcf.foundation.data;
 
+import com.google.gson.JsonParseException;
 import lol.hcf.foundation.data.impl.yml.ConfigurationFile;
+import org.yaml.snakeyaml.error.YAMLException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -114,7 +116,7 @@ public abstract class FileStorage<T extends FileStorage<?>> {
             }
 
             this.parse(sb.toString());
-        } catch (RuntimeException e) {
+        } catch (JsonParseException | YAMLException e) {
             System.err.printf("Malformed Data: %s,\nRenaming %s -> %s%n", this.targetFile.getPath(), this.targetFile.getName(), this.targetFile.getName() + ".old");
             File target = new File(this.targetFile.getPath() + File.separator + ".old");
             if (!this.targetFile.renameTo(target)) throw new RuntimeException("failed to rename file");
@@ -148,6 +150,8 @@ public abstract class FileStorage<T extends FileStorage<?>> {
      * @param data The data entries to be reflectively brought into the current instance of the lowest class in the current hierarchy
      */
     protected void reflectiveFieldSet(Map<String, Object> data) {
+        boolean shouldSave = false;
+
         try {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
@@ -155,12 +159,20 @@ public abstract class FileStorage<T extends FileStorage<?>> {
                     ConfigurationFile.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
                 }
 
+                Object value = data.get(field.getName());
                 field.setAccessible(true);
-                field.set(this, data.get(field.getName()));
+
+                if (value == null) {
+                    shouldSave = true;
+                    continue;
+                }
+                field.set(this, value);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        if (shouldSave) this.save();
     }
 
     static {

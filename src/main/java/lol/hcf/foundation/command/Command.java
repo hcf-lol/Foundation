@@ -3,168 +3,55 @@ package lol.hcf.foundation.command;
 import lol.hcf.foundation.command.annotation.Argument;
 import lol.hcf.foundation.command.annotation.CommandEntryPoint;
 import lol.hcf.foundation.command.annotation.Optional;
-import lol.hcf.foundation.command.argument.ArgumentParser;
-import org.bukkit.ChatColor;
+import lol.hcf.foundation.command.config.CommandConfiguration;
+import lol.hcf.foundation.command.function.CommandExecutor;
+import lol.hcf.foundation.command.parse.CommandTypeAdapter;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.tree.ClassNode;
-import org.objectweb.asm.tree.FieldInsnNode;
-import org.objectweb.asm.tree.InsnList;
-import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.JumpInsnNode;
-import org.objectweb.asm.tree.LabelNode;
-import org.objectweb.asm.tree.LdcInsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
-import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.TypeInsnNode;
-import org.objectweb.asm.tree.VarInsnNode;
+import org.objectweb.asm.tree.*;
 
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public abstract class Command implements org.bukkit.command.CommandExecutor, TabCompleter {
+public class Command<C extends CommandConfiguration> implements org.bukkit.command.CommandExecutor, TabCompleter {
 
-    private static final Method DEFINE_CLASS;
+    protected final static Method DEFINE_CLASS;
 
-    static {
-        try {
-            DEFINE_CLASS = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-            Command.DEFINE_CLASS.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    protected final C config;
     protected final String[] aliases;
-    protected final String usage;
     protected final String permission;
-    protected final boolean allowConsole;
+    protected final boolean playerOnly;
+
+    protected String usage;
 
     private final CommandExecutor executor;
 
-    /**
-     * Generates a {@link CommandExecutor} implementation. This method is expensive in creating and generating
-     * a new class instance via ASM and Reflection. Subsequent calls to {@link Command#onCommand(CommandSender, org.bukkit.command.Command, String, String[])}
-     * will result in fast/direct access speed.
-     *
-     * @param permission The permission node required
-     * @param allowConsole Whether or not to allow console / non-players to run the command
-     * @param aliases Aliases by which this command can be executed
-     *
-     */
-    public Command(String permission, boolean allowConsole, String... aliases) {
+    public Command(CommandTypeAdapter typeAdapter, C config, String permission, boolean playerOnly, String... aliases) {
+        this.config = config;
         this.aliases = aliases;
         this.permission = permission;
-        this.allowConsole = allowConsole;
-
-        Class<?> declaringClass = this.getClass();
-        Method method = Arrays.stream(declaringClass.getDeclaredMethods()).filter((m) -> m.isAnnotationPresent(CommandEntryPoint.class)).findFirst().orElseThrow(() -> new RuntimeException("no command entry point found"));
-
-        StringBuilder usageBuilder = new StringBuilder();
-
-        ClassNode node = new ClassNode();
-
-        node.version = V1_8;
-        node.access = ACC_PUBLIC;
-        node.name = this.getClassName(CommandExecutor.class) + "$" + declaringClass.getSimpleName();
-        node.superName = this.getClassName(Object.class);
-        node.interfaces.add(this.getClassName(CommandExecutor.class));
-
-        MethodNode executeNode = new MethodNode(ACC_PUBLIC, "execute", this.generateMethodDescriptor(void.class, Command.class, CommandSender.class, String[].class), null, null);
-        InsnList executeInstructions = executeNode.instructions;
-        executeInstructions.add(new VarInsnNode(ALOAD, 1));
-        executeInstructions.add(new TypeInsnNode(CHECKCAST, this.getClassName(declaringClass)));
-        executeInstructions.add(new VarInsnNode(ALOAD, 2));
-
-        StringBuilder methodDescriptor = new StringBuilder();
-        methodDescriptor.append("(").append(Type.getType(CommandSender.class).getDescriptor());
-
-        for (int i = 1; i < method.getParameters().length; i++) {
-            Parameter parameter = method.getParameters()[i];
-            String parameterName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).name() : parameter.getName();
-            usageBuilder.append("[").append(parameterName).append("] ");
-
-
-            executeInstructions.add(new FieldInsnNode(
-                GETSTATIC,
-                this.getClassName(ArgumentParser.class),
-                "PARSE_" + parameter.getType().getSimpleName().toUpperCase(),
-                'L' + this.getClassName(Function.class) + ';'
-            ));
-
-            if (i == method.getParameters().length - 1 && parameter.isAnnotationPresent(Optional.class)) {
-                LabelNode endLabel = new LabelNode();
-                LabelNode elseLabel = new LabelNode();
-
-                executeInstructions.add(new LdcInsnNode(i - 1));
-                executeInstructions.add(new VarInsnNode(ALOAD, 3));
-                executeInstructions.add(new InsnNode(ARRAYLENGTH));
-                executeInstructions.add(new JumpInsnNode(IF_ICMPLT, elseLabel));
-
-                executeInstructions.add(new InsnNode(ACONST_NULL));
-                executeInstructions.add(new JumpInsnNode(GOTO, endLabel));
-                executeInstructions.add(elseLabel);
-
-                executeInstructions.add(new VarInsnNode(ALOAD, 3));
-                executeInstructions.add(new LdcInsnNode(i - 1));
-                executeInstructions.add(new InsnNode(AALOAD));
-                executeInstructions.add(endLabel);
-
-            } else {
-
-                executeInstructions.add(new VarInsnNode(ALOAD, 3));
-                executeInstructions.add(new LdcInsnNode(i - 1));
-                executeInstructions.add(new InsnNode(AALOAD));
-            }
-
-            executeInstructions.add(new MethodInsnNode(INVOKEINTERFACE, this.getClassName(Function.class), "apply", "(Ljava/lang/Object;)Ljava/lang/Object;"));
-            executeInstructions.add(new TypeInsnNode(CHECKCAST, this.getClassName(parameter.getType())));
-
-            methodDescriptor.append(Type.getType(parameter.getType()).getDescriptor());
-        }
-
-        methodDescriptor.append(")V");
-
-        executeInstructions.add(new MethodInsnNode(INVOKEVIRTUAL, this.getClassName(declaringClass), method.getName(), methodDescriptor.toString()));
-        executeInstructions.add(new InsnNode(RETURN));
-
-        MethodNode constructor = new MethodNode(ACC_PUBLIC, "<init>", this.generateMethodDescriptor(void.class), null, null);
-        constructor.instructions.add(new VarInsnNode(ALOAD, 0));
-        constructor.instructions.add(new MethodInsnNode(INVOKESPECIAL, this.getClassName(Object.class), "<init>", "()V"));
-        constructor.instructions.add(new InsnNode(RETURN));
-
-        node.methods.add(constructor);
-        node.methods.add(executeNode);
-
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-        node.accept(writer);
-        try {
-            byte[] buffer = writer.toByteArray();
-            Class<?> clazz = (Class<?>) Command.DEFINE_CLASS.invoke(this.getClass().getClassLoader(),node.name.replace('/', '.'), buffer, 0, buffer.length);
-            this.executor = (CommandExecutor) clazz.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-
-        if (usageBuilder.length() > 0) usageBuilder.deleteCharAt(usageBuilder.length() - 1);
-        this.usage = usageBuilder.toString();
+        this.playerOnly = playerOnly;
+        this.executor = this.generateCommandExecutor(this.findEntryPoint(), typeAdapter);
     }
 
-    protected List<String> onTabComplete(CommandSender sender, String label, String[] args) {
-        return null;
+    public Command(C config, String permission, boolean playerOnly, String... aliases) {
+        this(new CommandTypeAdapter(), config, permission, playerOnly, aliases);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (!this.allowConsole && !(sender instanceof Player)) {
+        if (this.playerOnly && !(sender instanceof Player)) {
             sender.sendMessage("This command cannot be executed if you are not a player.");
             return true;
         }
@@ -174,40 +61,191 @@ public abstract class Command implements org.bukkit.command.CommandExecutor, Tab
             return true;
         }
 
-        try {
-            this.executor.execute(this, sender, args);
-        } catch (ArgumentParser.ArgumentException | ArrayIndexOutOfBoundsException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid command usage:");
-            sender.sendMessage(ChatColor.RED.toString() + '/' + label + ' ' + this.usage);
-        }
-
+        this.executor.accept(sender, args);
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
-        if (!sender.hasPermission(this.permission)) {
-            sender.sendMessage(command.getPermissionMessage());
-            return null;
-        }
+    public List<String> onTabComplete(CommandSender sender, org.bukkit.command.Command command, String alias, String[] args) {
+        if (this.playerOnly && !(sender instanceof Player)) return null;
+        if (!sender.hasPermission(this.permission)) return null;
 
-        return this.onTabComplete(sender, label, args);
+        return this.onTabComplete(sender, alias, args);
     }
 
-    private String getClassName(Class<?> clazz) {
+    protected List<String> onTabComplete(CommandSender sender, String label, String[] args) {
+        return null;
+    }
+
+    public String[] getAliases() {
+        return this.aliases;
+    }
+
+    public String getPermission() {
+        return this.permission;
+    }
+
+    public boolean isPlayerOnly() {
+        return this.playerOnly;
+    }
+
+    public String getUsage() {
+        return this.usage;
+    }
+
+    protected Method findEntryPoint() {
+        return Arrays.stream(this.getClass().getMethods()).filter((m) -> m.isAnnotationPresent(CommandEntryPoint.class)).findFirst().orElseThrow(() -> new RuntimeException("no command entry point"));
+    }
+
+    protected CommandExecutor generateCommandExecutor(Method target, CommandTypeAdapter typeAdapter) {
+        StringBuilder usageBuilder = new StringBuilder();
+        // Maintain insertion order but remove duplicates by using a LinkedHashSet
+        Set<Class<?>> uniqueParameters = Arrays.stream(target.getParameterTypes()).filter((p) -> p != CommandSender.class).collect(Collectors.toCollection(LinkedHashSet::new));
+        Map<Class<?>, String> parserMapping = new HashMap<>();
+
+        ClassNode node = new ClassNode();
+        node.version = V1_8;
+        node.access = ACC_PUBLIC;
+        node.name = getClassName(CommandExecutor.class) + '$' + this.getClass().getSimpleName() + '$' + target.getName();
+        node.superName = getClassName(Object.class);
+        node.interfaces.add(getClassName(CommandExecutor.class));
+
+        List<Class<?>> concatParameters = new ArrayList<>(uniqueParameters.size() + 1);
+        concatParameters.add(target.getDeclaringClass());
+
+        for (int i = 0; i < uniqueParameters.size(); i++) concatParameters.add(Function.class);
+
+        node.fields.add(new FieldNode(ACC_PRIVATE | ACC_FINAL, "target", 'L' + getClassName(target.getDeclaringClass()) + ';', null, null));
+
+        MethodNode constructor = new MethodNode(ACC_PUBLIC, "<init>", generateMethodDescriptor(void.class, concatParameters), null, null);
+        InsnList instructions = constructor.instructions;
+
+        instructions.add(new VarInsnNode(ALOAD, 0));
+        instructions.add(new MethodInsnNode(INVOKESPECIAL, getClassName(Object.class), "<init>", "()V"));
+
+        instructions.add(new VarInsnNode(ALOAD, 0));
+        instructions.add(new VarInsnNode(ALOAD, 1));
+        instructions.add(new FieldInsnNode(PUTFIELD, node.name, "target", 'L' + getClassName(target.getDeclaringClass()) + ';'));
+
+        int uniqueParameterIndex = 1;
+        for (Class<?> parameter : uniqueParameters) {
+            String name = "parser" + uniqueParameterIndex;
+            String descriptor = 'L' + getClassName(Function.class) + ';';
+
+            instructions.add(new VarInsnNode(ALOAD, 0));
+            instructions.add(new VarInsnNode(ALOAD, uniqueParameterIndex + 1));
+            instructions.add(new FieldInsnNode(PUTFIELD, node.name, name, descriptor));
+
+            node.fields.add(new FieldNode(ACC_PRIVATE | ACC_FINAL, name, descriptor, null, null));
+            parserMapping.put(parameter, name);
+            uniqueParameterIndex++;
+        }
+
+        instructions.add(new InsnNode(RETURN));
+        node.methods.add(constructor);
+        MethodNode accept = new MethodNode(ACC_PUBLIC, "accept", generateMethodDescriptor(void.class, Arrays.asList(CommandSender.class, String[].class)), null, null);
+        instructions = accept.instructions;
+
+        instructions.add(new VarInsnNode(ALOAD, 0));
+        instructions.add(new FieldInsnNode(GETFIELD, node.name, "target", 'L' + getClassName(target.getDeclaringClass()) + ';'));
+
+        int parameterIndex = 0;
+        for (Parameter parameter : target.getParameters()) {
+            Class<?> parameterType = parameter.getType();
+            if (parameterType == CommandSender.class) {
+                instructions.add(new VarInsnNode(ALOAD, 1));
+                continue;
+            }
+
+            String argumentName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).name() : parameter.getName();
+            usageBuilder.append('[').append(argumentName).append("] ");
+
+            boolean optionalParameter = parameter.isAnnotationPresent(Optional.class);
+            LabelNode parse = new LabelNode();
+            LabelNode end = new LabelNode();
+
+            if (optionalParameter) {
+                instructions.add(new LdcInsnNode(parameterIndex));
+                instructions.add(new VarInsnNode(ALOAD, 2));
+                instructions.add(new InsnNode(ARRAYLENGTH));
+                instructions.add(new JumpInsnNode(IF_ICMPLT, parse));
+                instructions.add(new InsnNode(ACONST_NULL));
+                instructions.add(new JumpInsnNode(GOTO, end));
+            }
+
+            instructions.add(parse);
+            instructions.add(new VarInsnNode(ALOAD, 0));
+            instructions.add(new FieldInsnNode(GETFIELD, node.name, parserMapping.get(parameterType), 'L' + getClassName(Function.class) + ';'));
+            instructions.add(new VarInsnNode(ALOAD, 2));
+            instructions.add(new LdcInsnNode(parameterIndex));
+            instructions.add(new InsnNode(AALOAD));
+
+            instructions.add(new MethodInsnNode(INVOKEINTERFACE, getClassName(Function.class), "apply", "(Ljava/lang/Object;)Ljava/lang/Object;"));
+            instructions.add(new TypeInsnNode(CHECKCAST, getClassName(parameterType)));
+            instructions.add(end);
+
+            parameterIndex++;
+        }
+
+        instructions.add(new MethodInsnNode(INVOKEVIRTUAL, getClassName(target.getDeclaringClass()), target.getName(), generateMethodDescriptor(target.getReturnType(), Arrays.asList(target.getParameterTypes()))));
+        instructions.add(new InsnNode(RETURN));
+
+        node.methods.add(accept);
+
+        MethodNode bridge = new MethodNode(ACC_PUBLIC | ACC_BRIDGE | ACC_SYNTHETIC, "accept", generateMethodDescriptor(void.class, Arrays.asList(Object.class, Object.class)), null, null);
+        bridge.instructions.add(new VarInsnNode(ALOAD, 0));
+        bridge.instructions.add(new VarInsnNode(ALOAD, 1));
+        bridge.instructions.add(new TypeInsnNode(CHECKCAST, getClassName(CommandSender.class)));
+        bridge.instructions.add(new VarInsnNode(ALOAD, 2));
+        bridge.instructions.add(new TypeInsnNode(CHECKCAST, getClassName(String[].class)));
+        bridge.instructions.add(new MethodInsnNode(INVOKEVIRTUAL, node.name, "accept", accept.desc));
+        bridge.instructions.add(new InsnNode(RETURN));
+
+        node.methods.add(bridge);
+
+        ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        node.accept(cw);
+
+        this.usage = usageBuilder.toString();
+
+        try {
+            byte[] classFileBuffer = cw.toByteArray();
+            Class<?> clazz = (Class<?>) Command.DEFINE_CLASS.invoke(this.getClass().getClassLoader(), node.name.replace('/', '.'), classFileBuffer, 0, classFileBuffer.length);
+            Constructor<?> c = clazz.getConstructor(concatParameters.toArray(new Class<?>[0]));
+
+            List<Object> parameters = new ArrayList<>(uniqueParameters.size() + 1);
+            parameters.add(this);
+            for (Class<?> type : uniqueParameters) {
+                parameters.add(typeAdapter.getParser(type));
+            }
+
+            return (CommandExecutor) c.newInstance(parameters.toArray());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getClassName(Class<?> clazz) {
         return clazz.getName().replace('.', '/');
     }
 
-    private String generateMethodDescriptor(Class<?> returnType, Class<?>... parameters) {
+    private static String generateMethodDescriptor(Class<?> returnType, Iterable<Class<?>> types) {
         StringBuilder builder = new StringBuilder();
         builder.append('(');
 
-        for (Class<?> parameter : parameters) {
-            builder.append(Type.getType(parameter).getDescriptor());
+        for (Class<?> type : types) {
+            builder.append(Type.getType(type).getDescriptor());
         }
 
-        builder.append(')').append(Type.getType(returnType).getDescriptor());
+        return builder.append(')').append(Type.getType(returnType).getDescriptor()).toString();
+    }
 
-        return builder.toString();
+    static {
+        try {
+            DEFINE_CLASS = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
+            Command.DEFINE_CLASS.setAccessible(true);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
