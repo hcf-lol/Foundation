@@ -90,7 +90,7 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
 
     public void setCommand(org.bukkit.command.PluginCommand command) {
         command.setExecutor(this);
-        //command.setTabCompleter(this);
+        command.setTabCompleter(this);
     }
 
     @Override
