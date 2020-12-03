@@ -147,7 +147,7 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
             this.subcommands = new HashMap<>();
         }
 
-        public CommandTreeBuilder<C> registerSubcommand(BiFunction<CommandTypeAdapter, CommandConfiguration, Command<C>> function, String category, String description) {
+        public CommandTreeBuilder<C> registerSubcommand(BiFunction<CommandTypeAdapter, C, Command<C>> function, String category, String description) {
             CommandEntry entry = new CommandEntry(category, description, function.apply(this.typeAdapter, this.commandConfig));
             Arrays.stream(entry.command.getAliases()).forEach((alias) -> this.subcommands.put(alias.toLowerCase(), entry));
             return this;
