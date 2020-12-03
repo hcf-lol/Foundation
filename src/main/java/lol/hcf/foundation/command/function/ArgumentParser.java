@@ -6,11 +6,11 @@ import java.util.function.Function;
 public interface ArgumentParser<T> extends Function<String, T> {
 
     class Exception extends RuntimeException {
-
-        private boolean showCommandUsage;
+        private final boolean showCommandUsage;
 
         public Exception(String message, boolean showCommandUsage) {
             super(message);
+            this.showCommandUsage = showCommandUsage;
         }
 
         public boolean shouldShowCommandUsage() {

@@ -49,20 +49,7 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
         String[] subArgs = new String[args.length - 1];
         System.arraycopy(args, 1, subArgs, 0, subArgs.length);
 
-        try {
-            return entry.onCommand(sender, command, subLabel, subArgs);
-        } catch (ArgumentParser.Exception e) {
-            sender.sendMessage(e.getMessage());
-            if (e.shouldShowCommandUsage()) {
-                sender.sendMessage(super.config.getInvalidCommandUsageError());
-                sender.sendMessage(ChatColor.RED.toString() + '/' + subLabel + ' ' + entry.getUsage());
-            }
-        } catch (IndexOutOfBoundsException e) {
-            sender.sendMessage(super.config.getInvalidCommandUsageError());
-            sender.sendMessage(ChatColor.RED.toString() + '/' + subLabel + ' ' + entry.getUsage());
-        }
-
-        return true;
+        return entry.onCommand(sender, command, subLabel, subArgs);
     }
 
     @Override

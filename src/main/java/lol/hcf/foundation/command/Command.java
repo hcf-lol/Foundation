@@ -4,8 +4,10 @@ import lol.hcf.foundation.command.annotation.Argument;
 import lol.hcf.foundation.command.annotation.CommandEntryPoint;
 import lol.hcf.foundation.command.annotation.Optional;
 import lol.hcf.foundation.command.config.CommandConfiguration;
+import lol.hcf.foundation.command.function.ArgumentParser;
 import lol.hcf.foundation.command.function.CommandExecutor;
 import lol.hcf.foundation.command.parse.CommandTypeAdapter;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
@@ -59,7 +61,18 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
             return true;
         }
 
-        this.executor.accept(sender, args);
+        try {
+            this.executor.accept(sender, args);
+        } catch (ArgumentParser.Exception e) {
+            sender.sendMessage(e.getMessage());
+            if (e.shouldShowCommandUsage()) {
+                sender.sendMessage(ChatColor.RED.toString() + '/' + label + ' ' + this.usage);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            sender.sendMessage(this.config.getInvalidCommandUsageError());
+            sender.sendMessage(ChatColor.RED.toString() + '/' + label + ' ' + this.usage);
+        }
+
         return true;
     }
 
