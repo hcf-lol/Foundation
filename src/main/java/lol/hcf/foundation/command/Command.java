@@ -160,7 +160,7 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
                 continue;
             }
 
-            String argumentName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).name() : parameter.getName();
+            String argumentName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).value() : parameter.getName();
             usageBuilder.append('[').append(argumentName).append("] ");
 
             boolean optionalParameter = parameter.isAnnotationPresent(Optional.class);

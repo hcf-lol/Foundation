@@ -17,7 +17,7 @@ public class CommandExample {
         }
 
         @CommandEntryPoint
-        public void onCommand(CommandSender sender, @Argument(name = "testInt") @Optional Integer testVal) {
+        public void onCommand(CommandSender sender, @Argument("testInt") @Optional Integer testVal) {
             if (testVal == null) {
                 sender.sendMessage("no testval specified, but that's ok because it was optional!");
                 return;
