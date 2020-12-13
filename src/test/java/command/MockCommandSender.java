@@ -36,87 +36,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public Server getServer() {
-        return null;
-    }
-
-    @Override
-    public String getName() {
-        return null;
-    }
-
-    @Override
-    public boolean isPermissionSet(String name) {
-        return true;
-    }
-
-    @Override
-    public boolean isPermissionSet(Permission perm) {
-        return true;
-    }
-
-    @Override
-    public boolean hasPermission(String name) {
-        return true;
-    }
-
-    @Override
-    public boolean hasPermission(Permission perm) {
-        return true;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin) {
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-        return null;
-    }
-
-    @Override
-    public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-        return null;
-    }
-
-    @Override
-    public void removeAttachment(PermissionAttachment attachment) {
-
-    }
-
-    @Override
-    public void recalculatePermissions() {
-
-    }
-
-    @Override
-    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-        return null;
-    }
-
-    @Override
-    public boolean isOp() {
-        return true;
-    }
-
-    @Override
-    public void setOp(boolean value) {
-
-    }
-
-    @Override
     public String getDisplayName() {
         return null;
     }
 
     @Override
-    public void setDisplayName(String name) {
+    public void setDisplayName(String s) {
 
     }
 
@@ -126,12 +51,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setPlayerListName(String name) {
+    public void setPlayerListName(String s) {
 
     }
 
     @Override
-    public void setCompassTarget(Location loc) {
+    public void setCompassTarget(Location location) {
 
     }
 
@@ -146,22 +71,22 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void sendRawMessage(String message) {
+    public void sendRawMessage(String s) {
 
     }
 
     @Override
-    public void kickPlayer(String message) {
+    public void kickPlayer(String s) {
 
     }
 
     @Override
-    public void chat(String msg) {
+    public void chat(String s) {
 
     }
 
     @Override
-    public boolean performCommand(String command) {
+    public boolean performCommand(String s) {
         return false;
     }
 
@@ -171,7 +96,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setSneaking(boolean sneak) {
+    public void setSneaking(boolean b) {
 
     }
 
@@ -181,7 +106,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setSprinting(boolean sprinting) {
+    public void setSprinting(boolean b) {
 
     }
 
@@ -196,7 +121,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setSleepingIgnored(boolean isSleeping) {
+    public void setSleepingIgnored(boolean b) {
 
     }
 
@@ -206,57 +131,57 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void playNote(Location loc, byte instrument, byte note) {
+    public void playNote(Location location, byte b, byte b1) {
 
     }
 
     @Override
-    public void playNote(Location loc, Instrument instrument, Note note) {
+    public void playNote(Location location, Instrument instrument, Note note) {
 
     }
 
     @Override
-    public void playSound(Location location, Sound sound, float volume, float pitch) {
+    public void playSound(Location location, Sound sound, float v, float v1) {
 
     }
 
     @Override
-    public void playSound(Location location, String sound, float volume, float pitch) {
+    public void playSound(Location location, String s, float v, float v1) {
 
     }
 
     @Override
-    public void playEffect(Location loc, Effect effect, int data) {
+    public void playEffect(Location location, Effect effect, int i) {
 
     }
 
     @Override
-    public <T> void playEffect(Location loc, Effect effect, T data) {
+    public <T> void playEffect(Location location, Effect effect, T t) {
 
     }
 
     @Override
-    public void sendBlockChange(Location loc, Material material, byte data) {
+    public void sendBlockChange(Location location, Material material, byte b) {
 
     }
 
     @Override
-    public boolean sendChunkChange(Location loc, int sx, int sy, int sz, byte[] data) {
+    public boolean sendChunkChange(Location location, int i, int i1, int i2, byte[] bytes) {
         return false;
     }
 
     @Override
-    public void sendBlockChange(Location loc, int material, byte data) {
+    public void sendBlockChange(Location location, int i, byte b) {
 
     }
 
     @Override
-    public void sendSignChange(Location loc, String[] lines) throws IllegalArgumentException {
+    public void sendSignChange(Location location, String[] strings) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void sendMap(MapView map) {
+    public void sendMap(MapView mapView) {
 
     }
 
@@ -291,17 +216,17 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void incrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException {
+    public void incrementStatistic(Statistic statistic, int i) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void decrementStatistic(Statistic statistic, int amount) throws IllegalArgumentException {
+    public void decrementStatistic(Statistic statistic, int i) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void setStatistic(Statistic statistic, int newValue) throws IllegalArgumentException {
+    public void setStatistic(Statistic statistic, int i) throws IllegalArgumentException {
 
     }
 
@@ -326,17 +251,17 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void incrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException {
+    public void incrementStatistic(Statistic statistic, Material material, int i) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void decrementStatistic(Statistic statistic, Material material, int amount) throws IllegalArgumentException {
+    public void decrementStatistic(Statistic statistic, Material material, int i) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void setStatistic(Statistic statistic, Material material, int newValue) throws IllegalArgumentException {
+    public void setStatistic(Statistic statistic, Material material, int i) throws IllegalArgumentException {
 
     }
 
@@ -356,22 +281,22 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void incrementStatistic(Statistic statistic, EntityType entityType, int amount) throws IllegalArgumentException {
+    public void incrementStatistic(Statistic statistic, EntityType entityType, int i) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void decrementStatistic(Statistic statistic, EntityType entityType, int amount) {
+    public void decrementStatistic(Statistic statistic, EntityType entityType, int i) {
 
     }
 
     @Override
-    public void setStatistic(Statistic statistic, EntityType entityType, int newValue) {
+    public void setStatistic(Statistic statistic, EntityType entityType, int i) {
 
     }
 
     @Override
-    public void setPlayerTime(long time, boolean relative) {
+    public void setPlayerTime(long l, boolean b) {
 
     }
 
@@ -396,7 +321,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setPlayerWeather(WeatherType type) {
+    public void setPlayerWeather(WeatherType weatherType) {
 
     }
 
@@ -411,12 +336,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void giveExp(int amount) {
+    public void giveExp(int i) {
 
     }
 
     @Override
-    public void giveExpLevels(int amount) {
+    public void giveExpLevels(int i) {
 
     }
 
@@ -426,7 +351,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setExp(float exp) {
+    public void setExp(float v) {
 
     }
 
@@ -436,7 +361,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setLevel(int level) {
+    public void setLevel(int i) {
 
     }
 
@@ -446,7 +371,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setTotalExperience(int exp) {
+    public void setTotalExperience(int i) {
 
     }
 
@@ -456,7 +381,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setExhaustion(float value) {
+    public void setExhaustion(float v) {
 
     }
 
@@ -466,7 +391,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setSaturation(float value) {
+    public void setSaturation(float v) {
 
     }
 
@@ -476,7 +401,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setFoodLevel(int value) {
+    public void setFoodLevel(int i) {
 
     }
 
@@ -491,7 +416,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setBedSpawnLocation(Location location, boolean force) {
+    public void setBedSpawnLocation(Location location, boolean b) {
 
     }
 
@@ -501,7 +426,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setAllowFlight(boolean flight) {
+    public void setAllowFlight(boolean b) {
 
     }
 
@@ -531,17 +456,17 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setFlying(boolean value) {
+    public void setFlying(boolean b) {
 
     }
 
     @Override
-    public void setFlySpeed(float value) throws IllegalArgumentException {
+    public void setFlySpeed(float v) throws IllegalArgumentException {
 
     }
 
     @Override
-    public void setWalkSpeed(float value) throws IllegalArgumentException {
+    public void setWalkSpeed(float v) throws IllegalArgumentException {
 
     }
 
@@ -556,12 +481,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setTexturePack(String url) {
+    public void setTexturePack(String s) {
 
     }
 
     @Override
-    public void setResourcePack(String url) {
+    public void setResourcePack(String s) {
 
     }
 
@@ -581,12 +506,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setHealthScaled(boolean scale) {
+    public void setHealthScaled(boolean b) {
 
     }
 
     @Override
-    public void setHealthScale(double scale) throws IllegalArgumentException {
+    public void setHealthScale(double v) throws IllegalArgumentException {
 
     }
 
@@ -606,18 +531,13 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void sendTitle(String title, String subtitle) {
+    public void sendTitle(String s, String s1) {
 
     }
 
     @Override
     public void resetTitle() {
 
-    }
-
-    @Override
-    public Spigot spigot() {
-        return null;
     }
 
     @Override
@@ -631,7 +551,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setBanned(boolean banned) {
+    public void setBanned(boolean b) {
 
     }
 
@@ -641,7 +561,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setWhitelisted(boolean value) {
+    public void setWhitelisted(boolean b) {
 
     }
 
@@ -676,7 +596,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void acceptConversationInput(String input) {
+    public void acceptConversationInput(String s) {
 
     }
 
@@ -691,7 +611,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void abandonConversation(Conversation conversation, ConversationAbandonedEvent details) {
+    public void abandonConversation(Conversation conversation, ConversationAbandonedEvent conversationAbandonedEvent) {
 
     }
 
@@ -706,7 +626,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean setWindowProperty(InventoryView.Property prop, int value) {
+    public boolean setWindowProperty(InventoryView.Property property, int i) {
         return false;
     }
 
@@ -721,17 +641,17 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public InventoryView openWorkbench(Location location, boolean force) {
+    public InventoryView openWorkbench(Location location, boolean b) {
         return null;
     }
 
     @Override
-    public InventoryView openEnchanting(Location location, boolean force) {
+    public InventoryView openEnchanting(Location location, boolean b) {
         return null;
     }
 
     @Override
-    public void openInventory(InventoryView inventory) {
+    public void openInventory(InventoryView inventoryView) {
 
     }
 
@@ -746,7 +666,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setItemInHand(ItemStack item) {
+    public void setItemInHand(ItemStack itemStack) {
 
     }
 
@@ -756,7 +676,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setItemOnCursor(ItemStack item) {
+    public void setItemOnCursor(ItemStack itemStack) {
 
     }
 
@@ -776,7 +696,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setGameMode(GameMode mode) {
+    public void setGameMode(GameMode gameMode) {
 
     }
 
@@ -796,7 +716,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public double getEyeHeight(boolean ignoreSneaking) {
+    public double getEyeHeight(boolean b) {
         return 0;
     }
 
@@ -806,32 +726,32 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public List<Block> getLineOfSight(HashSet<Byte> transparent, int maxDistance) {
+    public List<Block> getLineOfSight(HashSet<Byte> hashSet, int i) {
         return null;
     }
 
     @Override
-    public List<Block> getLineOfSight(Set<Material> transparent, int maxDistance) {
+    public List<Block> getLineOfSight(Set<Material> set, int i) {
         return null;
     }
 
     @Override
-    public Block getTargetBlock(HashSet<Byte> transparent, int maxDistance) {
+    public Block getTargetBlock(HashSet<Byte> hashSet, int i) {
         return null;
     }
 
     @Override
-    public Block getTargetBlock(Set<Material> transparent, int maxDistance) {
+    public Block getTargetBlock(Set<Material> set, int i) {
         return null;
     }
 
     @Override
-    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
+    public List<Block> getLastTwoTargetBlocks(HashSet<Byte> hashSet, int i) {
         return null;
     }
 
     @Override
-    public List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance) {
+    public List<Block> getLastTwoTargetBlocks(Set<Material> set, int i) {
         return null;
     }
 
@@ -856,7 +776,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setRemainingAir(int ticks) {
+    public void setRemainingAir(int i) {
 
     }
 
@@ -866,7 +786,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setMaximumAir(int ticks) {
+    public void setMaximumAir(int i) {
 
     }
 
@@ -876,7 +796,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setMaximumNoDamageTicks(int ticks) {
+    public void setMaximumNoDamageTicks(int i) {
 
     }
 
@@ -886,17 +806,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public int _INVALID_getLastDamage() {
-        return 0;
-    }
-
-    @Override
-    public void setLastDamage(double damage) {
-
-    }
-
-    @Override
-    public void _INVALID_setLastDamage(int damage) {
+    public void setLastDamage(double v) {
 
     }
 
@@ -906,7 +816,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setNoDamageTicks(int ticks) {
+    public void setNoDamageTicks(int i) {
 
     }
 
@@ -916,27 +826,27 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect effect) {
+    public boolean addPotionEffect(PotionEffect potionEffect) {
         return false;
     }
 
     @Override
-    public boolean addPotionEffect(PotionEffect effect, boolean force) {
+    public boolean addPotionEffect(PotionEffect potionEffect, boolean b) {
         return false;
     }
 
     @Override
-    public boolean addPotionEffects(Collection<PotionEffect> effects) {
+    public boolean addPotionEffects(Collection<PotionEffect> collection) {
         return false;
     }
 
     @Override
-    public boolean hasPotionEffect(PotionEffectType type) {
+    public boolean hasPotionEffect(PotionEffectType potionEffectType) {
         return false;
     }
 
     @Override
-    public void removePotionEffect(PotionEffectType type) {
+    public void removePotionEffect(PotionEffectType potionEffectType) {
 
     }
 
@@ -946,7 +856,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean hasLineOfSight(Entity other) {
+    public boolean hasLineOfSight(Entity entity) {
         return false;
     }
 
@@ -956,7 +866,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setRemoveWhenFarAway(boolean remove) {
+    public void setRemoveWhenFarAway(boolean b) {
 
     }
 
@@ -966,7 +876,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setCanPickupItems(boolean pickup) {
+    public void setCanPickupItems(boolean b) {
 
     }
 
@@ -986,27 +896,17 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean setLeashHolder(Entity holder) {
+    public boolean setLeashHolder(Entity entity) {
         return false;
     }
 
     @Override
-    public void damage(double amount) {
+    public void damage(double v) {
 
     }
 
     @Override
-    public void _INVALID_damage(int amount) {
-
-    }
-
-    @Override
-    public void damage(double amount, Entity source) {
-
-    }
-
-    @Override
-    public void _INVALID_damage(int amount, Entity source) {
+    public void damage(double v, Entity entity) {
 
     }
 
@@ -1016,17 +916,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public int _INVALID_getHealth() {
-        return 0;
-    }
-
-    @Override
-    public void setHealth(double health) {
-
-    }
-
-    @Override
-    public void _INVALID_setHealth(int health) {
+    public void setHealth(double v) {
 
     }
 
@@ -1036,17 +926,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public int _INVALID_getMaxHealth() {
-        return 0;
-    }
-
-    @Override
-    public void setMaxHealth(double health) {
-
-    }
-
-    @Override
-    public void _INVALID_setMaxHealth(int health) {
+    public void setMaxHealth(double v) {
 
     }
 
@@ -1061,12 +941,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public Location getLocation(Location loc) {
+    public Location getLocation(Location location) {
         return null;
     }
 
     @Override
-    public void setVelocity(Vector velocity) {
+    public void setVelocity(Vector vector) {
 
     }
 
@@ -1086,22 +966,22 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause cause) {
+    public boolean teleport(Location location, PlayerTeleportEvent.TeleportCause teleportCause) {
         return false;
     }
 
     @Override
-    public boolean teleport(Entity destination) {
+    public boolean teleport(Entity entity) {
         return false;
     }
 
     @Override
-    public boolean teleport(Entity destination, PlayerTeleportEvent.TeleportCause cause) {
+    public boolean teleport(Entity entity, PlayerTeleportEvent.TeleportCause teleportCause) {
         return false;
     }
 
     @Override
-    public List<Entity> getNearbyEntities(double x, double y, double z) {
+    public List<Entity> getNearbyEntities(double v, double v1, double v2) {
         return null;
     }
 
@@ -1121,7 +1001,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setFireTicks(int ticks) {
+    public void setFireTicks(int i) {
 
     }
 
@@ -1146,7 +1026,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public boolean setPassenger(Entity passenger) {
+    public boolean setPassenger(Entity entity) {
         return false;
     }
 
@@ -1166,12 +1046,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setFallDistance(float distance) {
+    public void setFallDistance(float v) {
 
     }
 
     @Override
-    public void setLastDamageCause(EntityDamageEvent event) {
+    public void setLastDamageCause(EntityDamageEvent entityDamageEvent) {
 
     }
 
@@ -1191,12 +1071,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setTicksLived(int value) {
+    public void setTicksLived(int i) {
 
     }
 
     @Override
-    public void playEffect(EntityEffect type) {
+    public void playEffect(EntityEffect entityEffect) {
 
     }
 
@@ -1221,7 +1101,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setCustomName(String name) {
+    public void setCustomName(String s) {
 
     }
 
@@ -1231,7 +1111,7 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setCustomNameVisible(boolean flag) {
+    public void setCustomNameVisible(boolean b) {
 
     }
 
@@ -1241,27 +1121,102 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
-
-    }
-
-    @Override
-    public List<MetadataValue> getMetadata(String metadataKey) {
+    public Server getServer() {
         return null;
     }
 
     @Override
-    public boolean hasMetadata(String metadataKey) {
+    public String getName() {
+        return null;
+    }
+
+    @Override
+    public void setMetadata(String s, MetadataValue metadataValue) {
+
+    }
+
+    @Override
+    public List<MetadataValue> getMetadata(String s) {
+        return null;
+    }
+
+    @Override
+    public boolean hasMetadata(String s) {
         return false;
     }
 
     @Override
-    public void removeMetadata(String metadataKey, Plugin owningPlugin) {
+    public void removeMetadata(String s, Plugin plugin) {
 
     }
 
     @Override
-    public void sendPluginMessage(Plugin source, String channel, byte[] message) {
+    public boolean isPermissionSet(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean isPermissionSet(Permission permission) {
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(String s) {
+        return false;
+    }
+
+    @Override
+    public boolean hasPermission(Permission permission) {
+        return false;
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b) {
+        return null;
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin) {
+        return null;
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, String s, boolean b, int i) {
+        return null;
+    }
+
+    @Override
+    public PermissionAttachment addAttachment(Plugin plugin, int i) {
+        return null;
+    }
+
+    @Override
+    public void removeAttachment(PermissionAttachment permissionAttachment) {
+
+    }
+
+    @Override
+    public void recalculatePermissions() {
+
+    }
+
+    @Override
+    public Set<PermissionAttachmentInfo> getEffectivePermissions() {
+        return null;
+    }
+
+    @Override
+    public boolean isOp() {
+        return false;
+    }
+
+    @Override
+    public void setOp(boolean b) {
+
+    }
+
+    @Override
+    public void sendPluginMessage(Plugin plugin, String s, byte[] bytes) {
 
     }
 
@@ -1271,12 +1226,12 @@ public class MockCommandSender implements CommandSender, Player {
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile) {
+    public <T extends Projectile> T launchProjectile(Class<? extends T> aClass) {
         return null;
     }
 
     @Override
-    public <T extends Projectile> T launchProjectile(Class<? extends T> projectile, Vector velocity) {
+    public <T extends Projectile> T launchProjectile(Class<? extends T> aClass, Vector vector) {
         return null;
     }
 }

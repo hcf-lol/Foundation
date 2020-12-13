@@ -5,6 +5,7 @@ import lol.hcf.foundation.command.config.CommandConfiguration;
 import lol.hcf.foundation.command.function.ArgumentParser;
 import lol.hcf.foundation.command.function.CommandExecutor;
 import lol.hcf.foundation.command.parse.CommandTypeAdapter;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -49,7 +50,14 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
         String[] subArgs = new String[args.length - 1];
         System.arraycopy(args, 1, subArgs, 0, subArgs.length);
 
-        return entry.onCommand(sender, command, subLabel, subArgs);
+        try {
+            return entry.onCommand(sender, command, subLabel, subArgs);
+        } catch (Throwable e) {
+            Bukkit.broadcast("uncaught error: " + e.getClass() + ";" + e.getMessage(), "debug");
+
+        }
+
+        return true;
     }
 
     @Override
