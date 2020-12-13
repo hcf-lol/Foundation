@@ -21,7 +21,7 @@ public class DataFile extends FileStorage<DataFile> {
         builder.setPrettyPrinting();
 
         for (TypeAdapterContainer<?> container : adapters) {
-            builder.registerTypeAdapter(container.getTypeOfT(), container.getAdapter());
+            builder.registerTypeHierarchyAdapter(container.getTypeOfT(), container.getAdapter());
         }
 
         this.gson = builder.create();

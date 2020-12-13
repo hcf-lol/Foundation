@@ -8,3 +8,6 @@
 build/
 /test/
 out/
+
+# Mac OS
+.DS_Store
