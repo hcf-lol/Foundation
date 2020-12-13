@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'maven-publish'
+    id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 group 'lol.hcf'
@@ -16,13 +17,30 @@ repositories {
     maven {
         url 'https://oss.sonatype.org/content/repositories/snapshots/'
     }
+
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/hcf-lol/foundation")
+        credentials {
+            username = project.findProperty("gpr.user") ?: System.getenv("GPR_USERNAME")
+            password = project.findProperty("gpr.key") ?: System.getenv("GPR_TOKEN")
+        }
+    }
 }
 
 dependencies {
-    implementation group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'
+    compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'
+    compileOnly group: 'lol.hcf', name: 'antihashmap', version: '1.0.0'
 
-    implementation group: 'org.ow2.asm', name: 'asm', version: '9.0'
-    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '9.0'
+
+    compile group: 'org.ow2.asm', name: 'asm', version: '9.0'
+    compile group: 'org.ow2.asm', name: 'asm-tree', version: '9.0'
+
+    compile group: 'org.yaml', name: 'snakeyaml', version: '1.27'
+
+    compile group: 'redis.clients', name: 'jedis', version: '3.4.0'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.12.7'
+
 }
 
 java {
@@ -50,4 +68,13 @@ publishing {
             version project.version
         }
     }
+}
+
+shadowJar {
+    configurations = [project.configurations.compile]
+    archiveBaseName.set('shadow')
+    archiveClassifier.set('foundation')
+    archiveVersion.set(project.version)
+
+    relocate 'org.yaml', 'lol.hcf.foundation.org.yaml'
 }
