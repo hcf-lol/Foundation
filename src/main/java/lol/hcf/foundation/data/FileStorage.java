@@ -117,8 +117,10 @@ public abstract class FileStorage<T extends FileStorage<?>> {
 
             this.parse(sb.toString());
         } catch (JsonParseException | YAMLException e) {
-            System.err.printf("Malformed Data: %s,\nRenaming %s -> %s%n", this.targetFile.getPath(), this.targetFile.getName(), this.targetFile.getName() + ".old");
-            File target = new File(this.targetFile.getPath() + File.separator + ".old");
+            String error = "Malformed Data: " + this.targetFile.getPath() + ", Renaming " + this.targetFile.getName() + " -> " + this.targetFile.getName() + ".old";
+            System.err.println(e.getMessage());
+            System.err.println(error);
+            File target = new File(this.targetFile.getParentFile(), this.targetFile.getName() + ".old");
             if (!this.targetFile.renameTo(target)) throw new RuntimeException("failed to rename file");
             this.save();
         } catch (Exception e) {
@@ -147,11 +149,9 @@ public abstract class FileStorage<T extends FileStorage<?>> {
     /**
      * This method may or may not be used by any implementation of {@link FileStorage}
      * This method will break if any {@link SecurityManager} is preventing this operation.
-     * @param data The data entries to be reflectively brought into the current instance of the lowest class in the current hierarchy
+     * @param object The data entries to be reflectively brought into the current instance of the lowest class in the current hierarchy
      */
-    protected void reflectiveFieldSet(Map<String, Object> data) {
-        boolean shouldSave = false;
-
+    protected void reflectiveFieldSet(Object object) {
         try {
             for (Field field : this.getClass().getDeclaredFields()) {
                 if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
@@ -159,20 +159,12 @@ public abstract class FileStorage<T extends FileStorage<?>> {
                     ConfigurationFile.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
                 }
 
-                Object value = data.get(field.getName());
                 field.setAccessible(true);
-
-                if (value == null) {
-                    shouldSave = true;
-                    continue;
-                }
-                field.set(this, value);
+                field.set(this, field.get(object));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-        if (shouldSave) this.save();
     }
 
     static {

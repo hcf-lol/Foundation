@@ -33,27 +33,10 @@ public class DataFile extends FileStorage<DataFile> {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public DataFile parse(Reader in) {
         Object obj = this.gson.fromJson(in, this.getClass());
-        this.reflectiveFieldSet(obj);
+        super.reflectiveFieldSet(obj);
         return this;
-    }
-
-    private void reflectiveFieldSet(Object object) {
-        try {
-            for (Field field : this.getClass().getDeclaredFields()) {
-                if (Modifier.isStatic(field.getModifiers()) || Modifier.isTransient(field.getModifiers())) continue;
-                if (Modifier.isFinal(field.getModifiers())) {
-                    ConfigurationFile.MODIFIERS_FIELD.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-                }
-
-                field.setAccessible(true);
-                field.set(this, field.get(object));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

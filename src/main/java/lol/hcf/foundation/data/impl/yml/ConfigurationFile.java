@@ -18,6 +18,9 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.File;
 import java.io.Reader;
 import java.io.Writer;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -30,11 +33,9 @@ public class ConfigurationFile extends FileStorage<ConfigurationFile> {
         super(configFile);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public ConfigurationFile parse(Reader in) {
-        Map<String, Object> config = (Map<String, Object>) ConfigurationFile.YAML.load(in);
-        super.reflectiveFieldSet(config);
+        super.reflectiveFieldSet(ConfigurationFile.YAML.loadAs(in, this.getClass()));
         return this;
     }
 
@@ -64,8 +65,8 @@ public class ConfigurationFile extends FileStorage<ConfigurationFile> {
         }
 
         @Override
-        protected Node representScalar(Tag tag, String value, Character style) {
-            return super.representScalar(tag, value.replaceAll("&", "\\\\&").replaceAll(String.valueOf(ChatColor.COLOR_CHAR), "&"), style);
+        protected Node representScalar(Tag tag, String value) {
+            return super.representScalar(tag, value.replaceAll("&", "\\\\&").replaceAll(String.valueOf(ChatColor.COLOR_CHAR), "&"));
         }
     }
 
