@@ -16,14 +16,14 @@ public class ConnectionManager implements ConnectionHandler, AutoCloseable {
     public ConnectionManager(DatabaseConfiguration config) {
         StringBuilder connectionString = new StringBuilder();
         connectionString.append("mongodb://");
+
         if (config.database.getUser() != null) {
             connectionString.append(config.database.getUser());
             if (config.database.getPassword() != null) connectionString.append(':').append(config.database.getPassword());
             connectionString.append('@');
         }
 
-        connectionString.append(config.database.getHost()).append(config.database.getPort());
-
+        connectionString.append(config.database.getHost()).append(':').append(config.database.getPort()).append("/?authSource=admin");
         this.databaseClient = MongoClients.create(new ConnectionString(connectionString.toString()));
         this.pool = new JedisPool(config.redis.getHost(), config.redis.getPort());
         this.auth = config.redis.getAuth();
