@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'lol.hcf'
-version '4.0.1'
+version '4.0.2'
 
 repositories {
     mavenCentral()
@@ -31,7 +31,6 @@ repositories {
 dependencies {
     compileOnly group: 'org.spigotmc', name: 'spigot-api', version: '1.8.8-R0.1-SNAPSHOT'
     compileOnly group: 'lol.hcf', name: 'antihashmap', version: '1.0.0'
-
 
     compile group: 'org.ow2.asm', name: 'asm', version: '9.0'
     compile group: 'org.ow2.asm', name: 'asm-tree', version: '9.0'

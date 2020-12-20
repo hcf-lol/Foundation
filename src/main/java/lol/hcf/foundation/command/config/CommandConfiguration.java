@@ -4,8 +4,7 @@ import org.bukkit.ChatColor;
 
 public interface CommandConfiguration {
 
-    // These defaults should NOT be relied on, getChatSeparator/getCommandNotFoundError are expensive operations in their default
-    // implementations
+    String CHAT_SEPARATOR = ChatColor.GOLD.toString() + ChatColor.STRIKETHROUGH + new String(new char[53]).replace('\0', '-');
 
     default String getPrimaryColor() {
         return ChatColor.YELLOW.toString();
@@ -16,7 +15,7 @@ public interface CommandConfiguration {
     }
 
     default String getChatSeparator() {
-        return new String(new char[53]).replace('\0', '-');
+        return CommandConfiguration.CHAT_SEPARATOR;
     }
 
     default String getCommandNotFoundError() {
