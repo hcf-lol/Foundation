@@ -10,6 +10,8 @@ public class CommandTypeAdapter {
 
     private static final ArgumentParser<Integer> PARSE_INT = wrapException(Integer::parseInt, (e) -> new ArgumentParser.Exception("Invalid number entered.", true));
     private static final ArgumentParser<Float> PARSE_FLOAT = wrapException(Float::parseFloat, (e) -> new ArgumentParser.Exception("Invalid number entered.", true));
+    private static final ArgumentParser<Boolean> PARSE_BOOLEAN = wrapException(Boolean::parseBoolean, (e) -> new ArgumentParser.Exception("Expected true/false.", true));
+
     private static final ArgumentParser<String> PARSE_STRING = (in) -> in;
 
     private final Map<Class<?>, ArgumentParser<?>> parserMap;
@@ -20,6 +22,7 @@ public class CommandTypeAdapter {
         this.registerTypeMapping(Integer.class, CommandTypeAdapter.PARSE_INT);
         this.registerTypeMapping(Float.class, CommandTypeAdapter.PARSE_FLOAT);
         this.registerTypeMapping(String.class, CommandTypeAdapter.PARSE_STRING);
+        this.registerTypeMapping(Boolean.class, CommandTypeAdapter.PARSE_BOOLEAN);
     }
 
     public ArgumentParser<?> getParser(Class<?> clazz) {
