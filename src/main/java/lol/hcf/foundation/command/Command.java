@@ -210,6 +210,7 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         node.accept(cw);
 
+        usageBuilder.deleteCharAt(usageBuilder.length() - 1);
         this.usage = usageBuilder.toString();
 
         try {
