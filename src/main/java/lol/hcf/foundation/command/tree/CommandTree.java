@@ -197,8 +197,7 @@ public class CommandTree<C extends CommandConfiguration> extends Command<C> {
                         + ' '
                         + entry.command.getAliases()[0]
                         + ' '
-                        + entry.command.getUsage()
-                        + ' '
+                        + entry.command.getUsage()  // Already has a space at the end
                         + ChatColor.GRAY
                         + ChatColor.STRIKETHROUGH
                         + "-"
