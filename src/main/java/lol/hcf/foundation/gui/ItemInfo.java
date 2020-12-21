@@ -15,11 +15,14 @@ public class ItemInfo {
 
     public ItemInfo(Material type, int amount) {
         this.item = new ItemStack(type, amount);
-        if (type == Material.DIAMOND_BLOCK) System.out.println(System.identityHashCode(this.item));
     }
 
     public ItemInfo(Material type) {
         this(type, 1);
+    }
+
+    public ItemInfo(ItemStack itemStack) {
+        this.item = itemStack;
     }
 
     public ItemInfo setType(Material type) {
@@ -29,6 +32,11 @@ public class ItemInfo {
 
     public ItemInfo setAmount(int amount) {
         this.item.setAmount(amount);
+        return this;
+    }
+
+    public ItemInfo setDurability(int durability) {
+        this.item.setDurability((short) durability);
         return this;
     }
 
