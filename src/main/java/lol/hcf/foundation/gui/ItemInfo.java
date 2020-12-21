@@ -35,6 +35,11 @@ public class ItemInfo {
         return this;
     }
 
+    public ItemInfo setDurability(int durability) {
+        this.item.setDurability((short) durability);
+        return this;
+    }
+
     public ItemInfo setName(String name) {
         ItemMeta meta = this.item.getItemMeta();
         meta.setDisplayName(name);
