@@ -1,5 +1,5 @@
 name: Foundation
-version: 1.0.0
+version: 4.1.2
 description: Core Libraries and Utilities
 main: lol.hcf.foundation.plugin.Foundation
 load: STARTUP
