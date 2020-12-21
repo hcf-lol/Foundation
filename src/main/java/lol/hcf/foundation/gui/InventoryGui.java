@@ -90,4 +90,8 @@ public class InventoryGui {
         if (this.elementStorageCache == null) this.elementStorageCache = new AbstractElement[this.inventory.getSize()];
         this.elementStorageCache[slot] = element;
     }
+
+    public Margin getMargin() {
+        return elementMargin;
+    }
 }

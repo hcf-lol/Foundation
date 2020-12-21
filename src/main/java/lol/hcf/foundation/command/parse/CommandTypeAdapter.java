@@ -10,7 +10,7 @@ public class CommandTypeAdapter {
 
     private static final ArgumentParser<Integer> PARSE_INT = wrapException(Integer::parseInt, (e) -> new ArgumentParser.Exception("Invalid number entered.", true));
     private static final ArgumentParser<Float> PARSE_FLOAT = wrapException(Float::parseFloat, (e) -> new ArgumentParser.Exception("Invalid number entered.", true));
-    private static final ArgumentParser<Boolean> PARSE_BOOLEAN = wrapException(Boolean::parseBoolean, (e) -> new ArgumentParser.Exception("Expected true/false.", true));
+    private static final ArgumentParser<Boolean> PARSE_BOOLEAN = wrapException(CommandTypeAdapter::parseBoolean, (e) -> new ArgumentParser.Exception("Expected true/false.", true));
 
     private static final ArgumentParser<String> PARSE_STRING = (in) -> in;
 
@@ -41,5 +41,10 @@ public class CommandTypeAdapter {
                 throw throwableSupplier.apply(e);
             }
         };
+    }
+
+    private static boolean parseBoolean(String in) {
+        if (!in.equalsIgnoreCase("true") && !in.equalsIgnoreCase("false")) throw new RuntimeException();
+        return Boolean.parseBoolean(in);
     }
 }

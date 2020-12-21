@@ -107,10 +107,15 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
         Set<Class<?>> uniqueParameters = Arrays.stream(target.getParameterTypes()).filter((p) -> p != CommandSender.class).collect(Collectors.toCollection(LinkedHashSet::new));
         Map<Class<?>, String> parserMapping = new HashMap<>();
 
+        String className = getClassName(CommandExecutor.class) + '$' + this.getClass().getSimpleName() + '$' + target.getName();
+        try {
+            Class.forName(className);
+            throw new RuntimeException("cannot generate more than one command executor for the same method");
+        } catch (ClassNotFoundException ignore) {}
         ClassNode node = new ClassNode();
         node.version = V1_8;
         node.access = ACC_PUBLIC;
-        node.name = getClassName(CommandExecutor.class) + '$' + this.getClass().getSimpleName() + '$' + target.getName();
+        node.name = className;
         node.superName = getClassName(Object.class);
         node.interfaces.add(getClassName(CommandExecutor.class));
 
@@ -161,10 +166,16 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
                 continue;
             }
 
-            String argumentName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).value() : parameter.getName();
-            usageBuilder.append('[').append(argumentName).append("] ");
-
             boolean optionalParameter = parameter.isAnnotationPresent(Optional.class);
+
+            String argumentName = parameter.isAnnotationPresent(Argument.class) ? parameter.getAnnotation(Argument.class).value() : parameter.getName();
+            usageBuilder.append('[').append(argumentName);
+            if (optionalParameter) {
+                usageBuilder.append(" (optional)");
+            }
+
+            usageBuilder.append("] ");
+
             LabelNode parse = new LabelNode();
             LabelNode end = new LabelNode();
 
