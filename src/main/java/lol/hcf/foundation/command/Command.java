@@ -15,7 +15,6 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.*;
 
-import java.io.FileOutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
@@ -65,7 +64,7 @@ public class Command<C extends CommandConfiguration> implements org.bukkit.comma
         try {
             this.executor.accept(sender, args);
         } catch (ArgumentParser.Exception e) {
-            sender.sendMessage(e.getMessage());
+            sender.sendMessage(ChatColor.RED + e.getMessage());
             if (e.shouldShowCommandUsage()) {
                 sender.sendMessage(ChatColor.RED.toString() + '/' + label + ' ' + this.usage);
             }

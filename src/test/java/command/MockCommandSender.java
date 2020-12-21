@@ -1234,4 +1234,49 @@ public class MockCommandSender implements CommandSender, Player {
     public <T extends Projectile> T launchProjectile(Class<? extends T> aClass, Vector vector) {
         return null;
     }
+
+    @Override
+    public Spigot spigot() {
+        return null;
+    }
+
+    @Override
+    public int _INVALID_getLastDamage() {
+        return 0;
+    }
+
+    @Override
+    public void _INVALID_setLastDamage(int damage) {
+
+    }
+
+    @Override
+    public void _INVALID_damage(int amount) {
+
+    }
+
+    @Override
+    public void _INVALID_damage(int amount, Entity source) {
+
+    }
+
+    @Override
+    public int _INVALID_getHealth() {
+        return 0;
+    }
+
+    @Override
+    public void _INVALID_setHealth(int health) {
+
+    }
+
+    @Override
+    public int _INVALID_getMaxHealth() {
+        return 0;
+    }
+
+    @Override
+    public void _INVALID_setMaxHealth(int health) {
+
+    }
 }
